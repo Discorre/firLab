@@ -1,6 +1,11 @@
 #ifndef MYFULLBINARYTREE_HPP
 #define MYFULLBINARYTREE_HPP
 
+#include <iostream>
+#include <fstream>
+#include <stdexcept>
+#include <string>
+
 template <typename T>
 struct Node {
     T data;
@@ -18,18 +23,17 @@ private:
     // Вспомогательная функция для вставки элемента
     Node<T>* insert(Node<T>* node, T value) {
         if (node == nullptr) {
-            return new Node<T>(value); // Указываем, что Node - это Node<T>
+            return new Node<T>(value);
         }
 
-        // Вставляем элемент в подходящее место (сначала левый, затем правый)
+        // Вставляем элемент в соответствии с порядком
         if (node->left == nullptr) {
-            node->left = insert(node->left, value);
-        }
-        else if (node->right == nullptr) {
-            node->right = insert(node->right, value);
-        }
-        else {
-            node->left = insert(node->left, value);  // Если оба узла заняты, идем в левое поддерево
+            node->left = new Node<T>(value);
+        } else if (node->right == nullptr) {
+            node->right = new Node<T>(value);
+        } else {
+            // Если оба потомка заняты, вставляем в левое поддерево
+            insert(node->left, value);
         }
 
         return node;
@@ -48,7 +52,7 @@ private:
         return search(node->left, value) || search(node->right, value);
     }
 
-    // Вспомогательная функция для удаления элемента (удаление узлов с учетом 2 потомков)
+    // Вспомогательная функция для удаления элемента
     Node<T>* deleteNode(Node<T>* node, T value) {
         if (node == nullptr) {
             return nullptr;
@@ -74,10 +78,10 @@ private:
                 return temp;
             }
 
-            // Если 2 потомка, находим минимальное значение в правом поддереве
-            Node<T>* minNode = findMin(node->right);
-            node->data = minNode->data;
-            node->right = deleteNode(node->right, minNode->data);
+            // Если 2 потомка, находим максимальное значение в левом поддереве
+            Node<T>* maxNode = findMax(node->left);
+            node->data = maxNode->data;
+            node->left = deleteNode(node->left, maxNode->data);
         }
         else {
             node->left = deleteNode(node->left, value);
@@ -87,10 +91,10 @@ private:
         return node;
     }
 
-    // Вспомогательная функция для поиска минимального значения
-    Node<T>* findMin(Node<T>* node) {
-        while (node->left != nullptr) {
-            node = node->left;
+    // Вспомогательная функция для поиска максимального значения
+    Node<T>* findMax(Node<T>* node) {
+        while (node->right != nullptr) {
+            node = node->right;
         }
         return node;
     }
@@ -103,7 +107,6 @@ private:
             inOrder(node->right);
         }
     }
-
 
     // Pre-order обход для сохранения в файл
     void savePreOrder(Node<T>* node, std::ofstream& file) const {
@@ -127,21 +130,6 @@ private:
         node->right = loadPreOrder(file);  // Загружаем правое поддерево
         return node;
     }
-
-    // Вспомогательная функция для проверки, является ли дерево полным
-    bool isFull(Node<T>* node) const {
-        if (node == nullptr) {
-            return true;  // Пустое дерево - полное дерево
-        }
-
-        if ((node->left == nullptr && node->right != nullptr) || (node->left != nullptr && node->right == nullptr)) {
-            return false;  // Если у узла один потомок, дерево не является полным
-        }
-
-        // Рекурсивно проверяем левое и правое поддерево
-        return isFull(node->left) && isFull(node->right);
-    }
-
 
 public:
     // Конструктор
@@ -180,11 +168,6 @@ public:
     void print() const {
         inOrder(root);
         std::cout << std::endl;
-    }
-
-    // Проверка на полноту дерева
-    bool isFull() const {
-        return isFull(root);
     }
 
     // Сохранение дерева в файл
