@@ -27,10 +27,7 @@ public:
         delete[] table; // Освобождаем память
     }
 
-    // Метод для добавления элемента (HSET)
-    void HSET(const K& key, const V& value) {
-        table[hash(key)].push_back(key, value);
-    }
+    
 
     // Метод для получения элемента по ключу (HGET)
     V HGET(const K& key) {
@@ -40,6 +37,16 @@ public:
         }
         else {
             throw std::out_of_range("Key not found");
+        }
+    }
+
+    // Метод для добавления элемента (HSET)
+    void HSET(const K& key, const V& value) {
+        V value2{};
+        if(table[hash(key)].find(key, value2) == 0){
+            table[hash(key)].push_back(key, value);
+        }else{
+            std::cout << "Not robuit" << std::endl;
         }
     }
 

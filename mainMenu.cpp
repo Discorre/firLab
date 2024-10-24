@@ -1,7 +1,5 @@
 #include <iostream>
 #include <stdexcept>
-#include <string.h>
-#include <string>
 #include <fstream>
 #include "myListKV.hpp"
 #include "myVector.hpp"
@@ -235,7 +233,9 @@ static void treeMenu() {
         case '3':
             std::cout << "Введите значение для вывода: ";
             std::cin >> value;
-            std::cout << tree.TGET(value) << std::endl;
+            std::cout << "Есть ли этот элемент в дереве: " << tree.TGET(value) << std::endl;
+            std::cout << "Дерево полное: " << tree.isFull() << std::endl;
+            tree.print();
             break;
         case '4':
             std::cout << "Введите название файла: ";

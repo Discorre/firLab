@@ -1,14 +1,14 @@
 # Имя исполняемого файла(для Windows)
-TARGET = a.exe
+#TARGET = a.exe
 
 # Имя исполняемого файла(для Linux)
-#TARGET = a
+TARGET = a.out
 
 # Список исходных файлов .cpp
 SRCS = mainMenu.cpp
 
 # Список заголовочных файлов .h и .hpp
-HDRS = myListKV.hpp myVector.hpp mySinglyLinkedList.hpp myArray.hpp myDoublyLinkedList.hpp myQueue.hpp myStack.hpp 
+#HDRS = myListKV.hpp myVector.hpp mySinglyLinkedList.hpp myArray.hpp myDoublyLinkedList.hpp myQueue.hpp myStack.hpp 
 
 # Список объектных файлов .o, которые будут созданы
 OBJS = $(SRCS:.cpp=.o)
